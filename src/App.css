@@ -40,3 +40,45 @@
 button {
   font-size: calc(10px + 2vmin);
 }
+
+.transition-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.transition-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.btn-term {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-term:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+.course-selected { background-color: #198754;}
+
+.course-selected .card-title,
+.course-selected .card-text,
+.course-selected span {
+  color: white !important;
+  
+}
+
+.course-disabled {
+  background-color: #E9ECEF;
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter:  grayscale(20%);
+}
+
+.course-disabled .card-title,
+.course-disabled .card-text,
+.course-disabled span {
+  color: #6C757D !important;
+}
