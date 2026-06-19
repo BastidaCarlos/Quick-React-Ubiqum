@@ -111,3 +111,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/react,firebase,visualstudiocode,macos,windows
+
+.env
+.env.local
+.env.production
+.env.development
