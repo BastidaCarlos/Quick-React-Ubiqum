@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { useUserState } from "../utilities/firebase.js";
 
 const Course = ({ course, selected, setSelected }) => {
-  const isSelected = selected.includes(course);
+  const isSelected = selected.some(c => c.id === course.id);
   const isDisabled = !isSelected && hasConflict(course, selected);
   const [user] = useUserState();
 

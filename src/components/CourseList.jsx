@@ -54,9 +54,10 @@ const CourseList = ({ courses }) => {
   const [term, setTerm] = useState('Fall');
   const [selected, setSelected] = useState([]);
 
-  if (selected.some(course => course !== courses[course.id])) {
-    setSelected([])
-  };
+  const validIds = Object.keys(courses);
+  if (selected.some(c => !validIds.includes(c.id))) {
+    setSelected([]);
+  }
 
   const termCourses = Object.entries(courses)
     .filter(([id, course]) => term === getCourseTerm(course))

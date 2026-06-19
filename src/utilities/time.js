@@ -49,7 +49,9 @@ export const getCourseTerm = course => course.term;
 export const getCourseNumber = course => course.number;
 
 export const toggle = (x, lst) => (
-  lst.includes(x) ? lst.filter(y => y !== x) : [x, ...lst]
+  lst.some(c => c.id === x.id) 
+    ? lst.filter(c => c.id !== x.id) 
+    : [x, ...lst]
 );
 
 export const hasConflict = (course, selected) => (
