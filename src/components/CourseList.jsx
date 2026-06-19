@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { getCourseTerm, terms } from '../utilities/time.js';
 import Course from './Course.jsx';
+import { signInWithGoogle, signOut, useUserState } from '../utilities/firebase.js';
 
 const TermButton = ({term, setTerm, checked}) => (
   <>
@@ -17,20 +18,49 @@ const TermButton = ({term, setTerm, checked}) => (
   </>
 )
 
-const TermSelector = ({term, setTerm}) => (
-  <div className='d-flex flex-wrap gap-2 justify-content-center mb-5'>
-    {
-      Object.values(terms)
-        .map(value => <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />)
-    }
-  </div>
+const SignInButton = () => (
+  <button className='btn btn-light border px-4 py-2 rounded-pill fw-medium text-dark shadow-sm'
+      onClick={() => signInWithGoogle()}>
+    Sign In
+  </button>
 )
+
+const SignOutButton = () => (
+  <button className='btn btn-sm btn-outline-danger px-4 py-2 rounded-pill fw-medium shadow-sm'
+      onClick={() => signOut()}>
+    Sign Out
+  </button>
+)
+
+const TermSelector = ({term, setTerm}) => {
+  const [user] = useUserState();
+  return (
+    <div className="d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center gap-3 mb-5 w-100 px-2">
+      <div className='d-flex flex-wrap gap-2 justify-content-center'>
+        {
+          Object.values(terms)
+            .map(value => <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />)
+        }
+      </div>
+      <div className='d-flex align-items-center my-auto'>
+        { user ? <SignOutButton /> : <SignInButton /> }
+      </div>
+    </div>
+  )
+}
 
 
 const CourseList = ({ courses }) => {
   const [term, setTerm] = useState('Fall');
   const [selected, setSelected] = useState([]);
-  const termCourses = Object.values(courses).filter( course => term === getCourseTerm(course)); 
+
+  if (selected.some(course => course !== courses[course.id])) {
+    setSelected([])
+  };
+
+  const termCourses = Object.entries(courses)
+    .filter(([id, course]) => term === getCourseTerm(course))
+    .map(([id, course]) => ({...course, id}));
 
   return (
     <>

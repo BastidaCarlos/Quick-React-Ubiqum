@@ -1,9 +1,14 @@
 import React from "react";
 import { getCourseTerm, getCourseNumber, hasConflict, toggle } from '../utilities/time.js';
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { useUserState } from "../utilities/firebase.js";
 
 const Course = ({ course, selected, setSelected }) => {
   const isSelected = selected.includes(course);
   const isDisabled = !isSelected && hasConflict(course, selected);
+  const [user] = useUserState();
+
+  const navigate = useNavigate();
   
 
   return (
@@ -15,7 +20,8 @@ const Course = ({ course, selected, setSelected }) => {
           ? 'course-selected' 
           : ''
     }`}
-      onClick={isDisabled ? null : () => setSelected(toggle(course, selected)) }>
+      onClick={isDisabled ? null : () => setSelected(toggle(course, selected)) }
+      onDoubleClick={!user ? null : () => navigate('/edit', { state: course }) }>
       <div className='card-body d-flex flex-column justify-content-between p-4'>
         <div>
           <div className='card-title text-primary fw-bold mb-2 fs-5 text-uppercase tracking-wide'>{ getCourseTerm(course) } CS { getCourseNumber(course) }</div>

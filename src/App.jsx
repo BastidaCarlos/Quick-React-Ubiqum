@@ -1,8 +1,10 @@
 import React from 'react';
 import './App.css';
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
-import CourseList from './components/courseList';
+import CourseList from './components/CourseList';
 import { addScheduleTimes } from './utilities/time';
+import { useData } from "./utilities/firebase.js";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import EditForm from "./EditForm.jsx";
 
 const Banner = ({title}) => (
   <div className='text-center py-5 mb-5 bg-white rounded-3 shadow-sm border'>
@@ -10,36 +12,28 @@ const Banner = ({title}) => (
   </div>
 );
 
-const fetcSchedule = async () => {
-  const url = 'https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php'
-  const response = await fetch(url);
-  if (!response.ok) throw response;
-  return addScheduleTimes(await response.json());
-}
-
 const Main = () => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['schedule'],
-    queryFn: fetcSchedule
-  });
+  const [schedule, loading, error] = useData('/schedule', addScheduleTimes);
 
   if (error) return <h1>{ error.message }</h1>;
-  if (isLoading) return <h1>Loading the schedule...</h1>
+  if (loading) return <h1>Loading the schedule...</h1>
 
   return (
     <div className='container py-5'>
-      <Banner title={ data.title } />
-      <CourseList courses={ data.courses } />
+      <Banner title={ schedule.title } />
+        <Routes>
+          <Route path='/' element={<CourseList courses={ schedule. courses } />} />
+          <Route path='/edit' element={ <EditForm />} />
+        </Routes>
     </div>
   )
 }
 
-const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <BrowserRouter>
     <Main />
-  </QueryClientProvider>
+  </BrowserRouter>
 );
 
 export default App;
